@@ -5,6 +5,7 @@
 .grid {
     position:fixed;
     background: black;
+    border-radius:6px;
 }
 #content, #loading, #intro, #game {
     position:absolute;top:0px;left:0px;
