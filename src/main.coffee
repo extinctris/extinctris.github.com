@@ -104,12 +104,10 @@ do ->
       if empties.length == 0
         return
       empties.sort (a,b) -> a.y - b.y
-      console.log 'fall',JSON.stringify empties
       fallTo = empties[0]
       fallFrom = empties[empties.length-1].clone().add(0,1)
       #while @blocks[fallFrom.toString()]
       while @blocks[fallFrom.toString()] and not @blocks[fallTo.toString()]
-        console.log 'FALLING',JSON.stringify(fallFrom),JSON.stringify(fallTo)
         #assert not @blocks[fallTo.toString()], 'fallTo is full'
         # TODO debug that
         @swap fallTo, fallFrom, false
