@@ -1,0 +1,24 @@
+* detect-matches
+** remove-matches
+* scrolling
+** continuous
+** w/button
+* gravity
+* garbageblock
+** create
+** clear
+* stage-end (when garbage-block clear)
+* ui
+* score
+* extinction mechanic
+
+* sfx
+** block-swap
+** block-clear
+** drop
+** garbageblock-clear
+** scroll
+* bgm
+
+* better cursor art
+
