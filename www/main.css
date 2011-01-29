@@ -1,5 +1,8 @@
 body {
-    background:#444;
+    background:grey;
+}
+body, a {
+    color:white;
 }
 .assets {
     visibility:hidden;/*display:none breaks opera, contents don't load*/
@@ -10,8 +13,11 @@ body {
     background: black;
     border-radius:6px;
 }
-#content, #loading, #intro, #game {
+#content, #loading, #intro, #game, #gameover {
     position:absolute;top:0px;left:0px;
+}
+#gameover {
+    width:400px;height:320px;
 }
 .block {
     border:1px solid black;

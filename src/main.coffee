@@ -151,9 +151,9 @@ do ->
       pts = (new Point(x, @height-1) for x in xs)
       bs = _.filter (@blocks[p.toString()] for p in pts),
         (b) -> b?
-      console.log 'top row', bs
       if bs.length > 0
         @broker.trigger 'gameover'
+        return
       # Move existing blocks
       for y in ys
         for x in xs
@@ -185,6 +185,7 @@ do ->
         down: => @move 0, -1
         swap: => @grid.swap @pt, @pt.clone().add(1,0)
         scroll: => @grid.scroll()
+
   class Field
     constructor: (@grid, @cursor) ->
       @schedule = new Schedule()
@@ -282,10 +283,16 @@ do ->
         40: 'down'
       @inputBindings['Z'.charCodeAt(0)] = 'swap'
     bind: (win) ->
-      win.keydown (e) =>
+      win.bind 'keydown.input', (e) =>
         event = @inputBindings[e.which]
         if event?
           @broker.trigger event
+    unbind: (win) ->
+      win.unbind 'keydown.input'
+
+  gameover = ->
+    console.log 'gameover-fn'
+    $('#gameover').fadeIn(500)
 
   onStart = ->
     $('#intro').fadeOut()
@@ -300,9 +307,14 @@ do ->
     input.bind $(window)
     cursor.bind input.broker
     field.init()
-    setInterval (=>tryCatch =>field.schedule.tick()), 33
-    field.schedule.broker.bind
-      tick: ->
+    timer = setInterval (=>tryCatch =>field.schedule.tick()), 33
+    #field.schedule.broker.bind
+    #  tick: ->
+    grid.broker.bind
+      gameover: ->
+        clearInterval timer
+        input.unbind $(window)
+        gameover()
 
   onLoad = ->
     $('#loading').fadeOut()
