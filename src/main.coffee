@@ -82,21 +82,33 @@ do ->
         height:@sq @field.grid.height
       grid.appendTo('#game')
 
-      cursor = $('<div class="cursor">')
-      cursor.css
+      # TODO combine these
+      cursor1 = $('<div class="cursor">')
+      cursor1.css
         left:@x @field.cursor.pt.x
         top:@y @field.cursor.pt.y
         width:@sq()-1
         height:@sq()-1
-      cursor.appendTo('.grid')
+      cursor1.appendTo('.grid')
+      cursor2 = $('<div class="cursor">')
+      cursor2.css
+        left:@x @field.cursor.pt.x+1
+        top:@y @field.cursor.pt.y
+        width:@sq()-1
+        height:@sq()-1
+      cursor2.appendTo('.grid')
 
       @field.cursor.broker.bind
         move: (e, args) =>
           props =
             left:@x @field.cursor.pt.x
             top:@y @field.cursor.pt.y
-          cursor.animate props, 50
-      blocks = {}
+          cursor1.animate props, 50
+          props =
+            left: @x @field.cursor.pt.x+1
+            top:@y @field.cursor.pt.y
+          cursor2.animate props, 50
+        blocks = {}
       updateBlock = (b, pt) =>
         props =
           left:@x pt.x
