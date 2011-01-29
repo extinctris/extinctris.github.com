@@ -2,3 +2,33 @@
     visibility:hidden;/*display:none breaks opera, contents don't load*/
     position:absolute;top:0px;left:0px;
 }
+.grid {
+    position:fixed;
+    background: black;
+}
+#content, #loading, #intro, #game {
+    position:absolute;top:0px;left:0px;
+}
+.block {
+    position:absolute;
+    border:1px solid black;
+    border-radius:6px;
+}
+.block-0 {
+    background: red;
+}
+.block-1 {
+    background: blue;
+}
+.block-2 {
+    background: green;
+}
+.block-3 {
+    background: yellow;
+}
+.block-4 {
+    background: purple;
+}
+.block-5 {
+    background: cyan;
+}
