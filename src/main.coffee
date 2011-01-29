@@ -7,6 +7,27 @@ do ->
   bound = (val, min, max) ->
     return Math.min max, Math.max min, val
 
+  class Schedule
+    constructor: ->
+      @t = 0
+      @schedule = {}
+      @broker = $({})
+    at: (t, fn) ->
+      @schedule[t] ?= []
+      @schedule[t].push fn
+    delay: (t, fn) ->
+      @at(t + @t, fn)
+    interval: (t, fn) ->
+      recurse = =>
+        fn @t
+        @delay t, recurse
+      @delay t, recurse
+    tick: ->
+      @t += 1
+      for fn in @schedule[@t] ? []
+        fn @t
+      @broker.trigger 'tick', @t
+
   class Point
     constructor: (@x, @y) ->
     clone: -> new Point @x, @y
@@ -62,6 +83,7 @@ do ->
         swap: => @grid.swap @pt, @pt.clone().add(1,0)
   class Field
     constructor: (@grid, @types, @cursor) ->
+      @schedule = new Schedule()
     init: ->
       h = Math.floor @grid.height/2
       w = @grid.width
@@ -170,6 +192,9 @@ do ->
     input.bind $(window)
     cursor.bind input.broker
     field.init()
+    setInterval (=>tryCatch =>field.schedule.tick()), 33
+    field.schedule.broker.bind
+      tick: -> console.log 'tick',arguments
 
   onLoad = ->
     $('#loading').fadeOut()
