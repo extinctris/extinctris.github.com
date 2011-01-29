@@ -47,6 +47,7 @@ do ->
       ret = @types[index]
       assert ret?, 'rand is broken: '+index
       return ret
+
   class Grid
     constructor: (@width, @height) ->
       @blocks = {}
@@ -60,13 +61,53 @@ do ->
       delete @blocks[pt.toString()]
       @broker.trigger 'remove',
         pt: pt
+    findMatchingLine: (start, dx, dy) ->
+      expected = @blocks[start.toString()]
+      unless expected
+        return []
+
+      pt = start.clone()
+      actual = expected
+      matchesUp = []
+      while actual == expected
+        matchesUp.push pt.clone()
+        pt.add dx, dy
+        actual = @blocks[pt.toString()]
+
+      pt = start.clone()
+      actual = expected
+      matchesDown = []
+      while actual == expected
+        matchesDown.push pt.clone()
+        pt.add -dx, -dy
+        actual = @blocks[pt.toString()]
+
+      matchesDown.shift()
+      matches = matchesUp.concat(matchesDown)
+      return matches
+    findMatches: (pt) ->
+      horiz = @findMatchingLine pt, 1, 0
+      vert = @findMatchingLine pt, 0, 1
+      clear = []
+      if horiz.length >= 3
+        clear = clear.concat horiz
+      if vert.length >= 3
+        clear.shift() #hack to remove the duplicate at the beginning
+        clear = clear.concat vert
+      return clear
+
     swap: (pt1, pt2) ->
       tmp = @blocks[pt1.toString()]
       @blocks[pt1.toString()] = @blocks[pt2.toString()]
       @blocks[pt2.toString()] = tmp
+      cleared = @findMatches(pt1).concat @findMatches(pt2)
       @broker.trigger 'swap',
         pt1:pt1
         pt2:pt2
+        cleared:cleared
+      for pt in cleared
+        @remove pt
+
   class Cursor
     constructor: (@grid, @pt) ->
       @broker = $({})
@@ -146,6 +187,10 @@ do ->
           # TODO use ids instead? this is error-prone
           blocks[args.pt.toString()] = block
           block.appendTo('.grid')
+        remove: (e, args) =>
+          block = blocks[args.pt.toString()]
+          block.fadeOut null, ->
+            $(block).remove()
         swap: (e, args) =>
           b1 = blocks[args.pt1.toString()]
           b2 = blocks[args.pt2.toString()]

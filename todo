@@ -1,5 +1,3 @@
-* detect-matches
-** remove-matches
 * scrolling
 ** continuous
 *** accelerating
@@ -13,6 +11,9 @@
 * ui
 * score
 * extinction mechanic
+* animation/delay
+** remove-matches
+** gravity
 
 * sfx
 ** block-swap
