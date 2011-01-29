@@ -135,6 +135,7 @@ do ->
         38: 'up'
         39: 'right'
         40: 'down'
+      @inputBindings['Z'.charCodeAt(0)] = 'swap'
     bind: (win) ->
       win.keydown (e) =>
         event = @inputBindings[e.which]
