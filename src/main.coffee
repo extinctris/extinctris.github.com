@@ -6,6 +6,13 @@ do ->
 
   class Point
     constructor: (@x, @y) ->
+    clone: -> new Point @x, @y
+    add: (dx, dy) ->
+      @x += dx
+      @y += dy
+      return this
+    # TODO why isn't this working
+    toString: -> JSON.stringify {x:@x,y:@y}
   class BlockType
     constructor: (@n) ->
   class BlockTypes
@@ -21,14 +28,21 @@ do ->
       @blocks = {}
       @broker = $({})
     add: (pt, block) ->
-      @blocks[pt] = block
+      @blocks[pt.toString()] = block
       @broker.trigger 'add',
         pt: pt
         block: block
     remove: (pt) ->
-      delete @blocks[pt]
+      delete @blocks[pt.toString()]
       @broker.trigger 'remove',
         pt: pt
+    swap: (pt1, pt2) ->
+      tmp = @blocks[pt1.toString()]
+      @blocks[pt1.toString()] = @blocks[pt2.toString()]
+      @blocks[pt2.toString()] = tmp
+      @broker.trigger 'swap',
+        pt1:pt1
+        pt2:pt2
   class Cursor
     constructor: (@grid, @pt) ->
       @broker = $({})
@@ -42,6 +56,7 @@ do ->
         right: => @move 1, 0
         up: => @move 0, 1
         down: => @move 0, -1
+        swap: => @grid.swap @pt, @pt.clone().add(1,0)
   class Field
     constructor: (@grid, @types, @cursor) ->
     init: ->
@@ -78,15 +93,31 @@ do ->
             left:@x @field.cursor.pt.x
             top:@y @field.cursor.pt.y
           cursor.animate props, 50
+      blocks = {}
+      updateBlock = (b, pt) =>
+        props =
+          left:@x pt.x
+          top:@y pt.y
+        b.animate props, 50
       @field.grid.broker.bind
         add: (e, args) =>
           block = $('<div class="block block-'+args.block.n+'">')
           block.css
-            left:@x args.pt.x
-            top:@y args.pt.y
             width:@sq()-2
             height:@sq()-2
+          updateBlock block, args.pt
+          # TODO use ids instead? this is error-prone
+          blocks[args.pt.toString()] = block
           block.appendTo('.grid')
+        swap: (e, args) =>
+          b1 = blocks[args.pt1.toString()]
+          b2 = blocks[args.pt2.toString()]
+          blocks[args.pt1.toString()] = b2
+          blocks[args.pt2.toString()] = b1
+          if b2?
+            updateBlock b2, args.pt1
+          if b1?
+            updateBlock b1, args.pt2
 
   tryCatch = (fn) ->
     try
