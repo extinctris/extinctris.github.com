@@ -49,16 +49,18 @@ do ->
       return ret
 
   class Grid
-    constructor: (@width, @height) ->
+    constructor: (@width, @height, @types) ->
       @blocks = {}
       @broker = $({})
-    add: (pt, block) ->
+    add: (pt, block,clear=true) ->
       @blocks[pt.toString()] = block
-      cleared = @calcMatches [pt]
+      if clear
+        cleared = @calcMatches [pt]
       @broker.trigger 'add',
         pt: pt
         block: block
-      @clearMatches [pt], cleared
+      if clear
+        @clearMatches [pt], cleared
     remove: (pt) ->
       delete @blocks[pt.toString()]
       @broker.trigger 'remove',
@@ -140,6 +142,30 @@ do ->
         cleared:cleared
       @clearMatches [pt1, pt2], cleared
 
+    scroll: ->
+      console.log 'scroll-fn'
+      xs = [0...@width]
+      ys = [0...@height]
+      ys.reverse()
+      # TODO any blocks in the top row? gameover
+      # Move existing blocks
+      newblocks = {}
+      moved = []
+      for y in ys
+        for x in xs
+          pt = new Point(x,y)
+          up = new Point(x,y+1)
+          b = @blocks[pt.toString()]
+          if b?
+            @remove pt
+            @add up, b, false
+          #  moved.push pt
+          #  newblocks[up.toString()] = b
+      # insert new blocks. TODO use next-row
+      for x in xs
+        @add new Point(x, 0), @types.rand()
+      # TODO next-row
+
   class Cursor
     constructor: (@grid, @pt) ->
       @broker = $({})
@@ -154,16 +180,14 @@ do ->
         up: => @move 0, 1
         down: => @move 0, -1
         swap: => @grid.swap @pt, @pt.clone().add(1,0)
+        scroll: => @grid.scroll()
   class Field
-    constructor: (@grid, @types, @cursor) ->
+    constructor: (@grid, @cursor) ->
       @schedule = new Schedule()
     init: ->
       h = Math.floor @grid.height/2
-      w = @grid.width
       for y in [0...h] then do (y) =>
-        for x in [0...w] then do (x) =>
-          pt = new Point x, y
-          @grid.add pt, @types.rand()
+        @grid.scroll()
 
   class View
     x: (x) -> 32 * x
@@ -215,6 +239,8 @@ do ->
           block.css
             width:@sq()-2
             height:@sq()-2
+            left:@x args.pt.x
+            top:@y args.pt.y
           updateBlock block, args.pt
           # TODO use ids instead? this is error-prone
           blocks[args.pt.toString()] = block
@@ -244,6 +270,7 @@ do ->
     constructor: ->
       @broker = $({})
       @inputBindings =
+        13: 'scroll' #enter
         32: 'swap' #spacebar
         37: 'left' #arrows
         38: 'up'
@@ -260,9 +287,9 @@ do ->
     $('#intro').fadeOut()
     $('#game').fadeIn()
     types = new BlockTypes 5
-    grid = new Grid 6, 15
+    grid = new Grid 6, 15, types
     cursor = new Cursor grid, new Point 2,3
-    field = new Field grid, types, cursor
+    field = new Field grid, cursor
     view = new View field
 
     input = new Input()
