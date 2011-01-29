@@ -4,6 +4,9 @@ do ->
       throw new Error msg ? val
     return val
 
+  bound = (val, min, max) ->
+    return Math.min max, Math.max min, val
+
   class Point
     constructor: (@x, @y) ->
     clone: -> new Point @x, @y
@@ -47,8 +50,8 @@ do ->
     constructor: (@grid, @pt) ->
       @broker = $({})
     move: (dx, dy) ->
-      @pt.x += dx
-      @pt.y += dy
+      @pt.x = bound @pt.x + dx, 0, @grid.width-2
+      @pt.y = bound @pt.y + dy, 0, @grid.height-1
       @broker.trigger 'move', {dx:dx, dy:dy}
     bind: (input) ->
       input.bind
