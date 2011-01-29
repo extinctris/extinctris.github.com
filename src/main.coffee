@@ -145,12 +145,16 @@ do ->
     scroll: ->
       console.log 'scroll-fn'
       xs = [0...@width]
-      ys = [0...@height]
+      ys = [0...@height-1]
       ys.reverse()
-      # TODO any blocks in the top row? gameover
+      # any blocks in the top row? gameover
+      pts = (new Point(x, @height-1) for x in xs)
+      bs = _.filter (@blocks[p.toString()] for p in pts),
+        (b) -> b?
+      console.log 'top row', bs
+      if bs.length > 0
+        @broker.trigger 'gameover'
       # Move existing blocks
-      newblocks = {}
-      moved = []
       for y in ys
         for x in xs
           pt = new Point(x,y)
