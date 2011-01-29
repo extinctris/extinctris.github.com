@@ -2,12 +2,14 @@
 ** remove-matches
 * scrolling
 ** continuous
+*** accelerating
 ** w/button
 * gravity
 * garbageblock
 ** create
 ** clear
 * stage-end (when garbage-block clear)
+** next-stage
 * ui
 * score
 * extinction mechanic

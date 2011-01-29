@@ -194,7 +194,7 @@ do ->
     field.init()
     setInterval (=>tryCatch =>field.schedule.tick()), 33
     field.schedule.broker.bind
-      tick: -> console.log 'tick',arguments
+      tick: ->
 
   onLoad = ->
     $('#loading').fadeOut()
