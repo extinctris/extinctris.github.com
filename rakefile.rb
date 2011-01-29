@@ -56,7 +56,7 @@ task :assets => [:rasterize,:sfx]
 
 # made with sfxr
 task :sfx => ['www/lib'] do
-  sh 'cp assets/*.ogg www/lib/'
+  #sh 'cp assets/*.ogg www/lib/'
 end
 
 task :rasterize => ['www/lib']
