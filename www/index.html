@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <title>ExtincTetris</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="main.css" />
+    <link rel="icon" type="image/png" href="lib/todo.png" />
+    <script src="lib/underscore.js"></script>
+    <script src="lib/jquery.js"></script>
+    <script src="lib/main.js"></script>
+  </head>
+  <body>
+    <div class="assets">
+      <!--
+      <audio class="bgm bgm-live" preload src="lib/bgm-live.ogg"></audio>
+      <audio class="gameover" src="lib/gameover.ogg"></audio>
+      <img id="livedoll" src="lib/livedoll.png" />
+      -->
+    </div>
+    <div id="content">
+      <div id="loading">
+        <img src="lib/ajax-loader.gif"
+             alt="Loading... please wait warmly."
+             title="Loading... please wait warmly." />
+      </div>
+      <div id="intro" style="display:none">
+        <h1>ExtincTetris</h1>
+        <p>TODO directions</p>
+        <h3>Click to start</h3>
+      </div>
+      <div id="paused" style="display:none">
+        <h1>Paused</h1>
+        <p>press <b>Esc</b> to resume</p>
+      </div>
+      <div id="gameover" style="display:none">
+        <h1>Game Over</h1>
+        <p><a href="">Try again?</a></p>
+      </div>
+    </div>
+  </body>
+</html>

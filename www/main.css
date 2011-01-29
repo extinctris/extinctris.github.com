@@ -1,0 +1,4 @@
+.assets {
+    visibility:hidden;/*display:none breaks opera, contents don't load*/
+    position:absolute;top:0px;left:0px;
+}
