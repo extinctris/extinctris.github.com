@@ -4,6 +4,7 @@
 * extinction mechanic
 * stage-end (when garbage-block clear)
 ** next-stage
+* gameover
 * ui
 * score
 * animation/delay
