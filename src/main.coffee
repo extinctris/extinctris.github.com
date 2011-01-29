@@ -61,15 +61,13 @@ do ->
       delete @blocks[pt.toString()]
       @broker.trigger 'remove',
         pt: pt
-    findMatchingLine: (start, dx, dy) ->
+    findMatchingLine: (start, dx, dy, min=0, max=15) ->
       expected = @blocks[start.toString()]
-      unless expected
-        return []
 
       pt = start.clone()
       actual = expected
       matchesUp = []
-      while actual == expected
+      while actual == expected and min <= pt.x <= max and min <= pt.y <= max
         matchesUp.push pt.clone()
         pt.add dx, dy
         actual = @blocks[pt.toString()]
@@ -77,7 +75,7 @@ do ->
       pt = start.clone()
       actual = expected
       matchesDown = []
-      while actual == expected
+      while actual == expected and min <= pt.x <= max and min <= pt.y <= max
         matchesDown.push pt.clone()
         pt.add -dx, -dy
         actual = @blocks[pt.toString()]
@@ -86,8 +84,8 @@ do ->
       matches = matchesUp.concat(matchesDown)
       return matches
     findMatches: (pt) ->
-      horiz = @findMatchingLine pt, 1, 0
-      vert = @findMatchingLine pt, 0, 1
+      horiz = unless @blocks[pt.toString()] then [] else @findMatchingLine pt, 1, 0
+      vert = unless @blocks[pt.toString()] then [] else @findMatchingLine pt, 0, 1
       clear = []
       if horiz.length >= 3
         clear = clear.concat horiz
@@ -96,7 +94,29 @@ do ->
         clear = clear.concat vert
       return clear
 
-    swap: (pt1, pt2) ->
+    fall: (pt) ->
+      # any space to fall?
+      if @blocks[pt.toString()]
+        return
+      empties = @findMatchingLine(pt, 0, 1)
+      #assert empties.length > 0, 'no empties?'
+      # TODO debug the above
+      if empties.length == 0
+        return
+      empties.sort (a,b) -> a.y - b.y
+      console.log 'fall',JSON.stringify empties
+      fallTo = empties[0]
+      fallFrom = empties[empties.length-1].clone().add(0,1)
+      #while @blocks[fallFrom.toString()]
+      while @blocks[fallFrom.toString()] and not @blocks[fallTo.toString()]
+        console.log 'FALLING',JSON.stringify(fallFrom),JSON.stringify(fallTo)
+        #assert not @blocks[fallTo.toString()], 'fallTo is full'
+        # TODO debug that
+        @swap fallTo, fallFrom, false
+        fallTo.add(0,1)
+        fallFrom.add(0,1)
+
+    swap: (pt1, pt2, cursor=true) ->
       tmp = @blocks[pt1.toString()]
       @blocks[pt1.toString()] = @blocks[pt2.toString()]
       @blocks[pt2.toString()] = tmp
@@ -107,6 +127,15 @@ do ->
         cleared:cleared
       for pt in cleared
         @remove pt
+      if cursor or true
+        @fall pt1
+        @fall pt2
+        # TODO overkill
+        @fall pt1.clone().add(0,-1)
+        @fall pt2.clone().add(0,-1)
+        for pt in cleared
+          @fall pt
+          @fall pt.clone().add(0,-1)
 
   class Cursor
     constructor: (@grid, @pt) ->
