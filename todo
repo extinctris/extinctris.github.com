@@ -2,14 +2,11 @@
 ** continuous
 *** accelerating
 ** w/button
-* garbageblock
-** create
-** clear
+* extinction mechanic
 * stage-end (when garbage-block clear)
 ** next-stage
 * ui
 * score
-* extinction mechanic
 * animation/delay
 ** remove-matches
 ** gravity
@@ -21,6 +18,9 @@
 ** garbageblock-clear
 ** scroll
 * bgm
+* garbageblock
+** create
+** clear
 
 * better cursor art
 
