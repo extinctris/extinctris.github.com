@@ -54,9 +54,11 @@ do ->
       @broker = $({})
     add: (pt, block) ->
       @blocks[pt.toString()] = block
+      cleared = @calcMatches [pt]
       @broker.trigger 'add',
         pt: pt
         block: block
+      @clearMatches [pt], cleared
     remove: (pt) ->
       delete @blocks[pt.toString()]
       @broker.trigger 'remove',
@@ -114,26 +116,29 @@ do ->
         fallTo.add(0,1)
         fallFrom.add(0,1)
 
+    calcMatches: (pts) ->
+      cleared = []
+      for pt in pts
+        cleared = cleared.concat @findMatches pt
+      return cleared
+    clearMatches: (pts, cleared) ->
+      for pt in cleared
+        @remove pt
+      for pt in pts.concat(cleared)
+        @fall pt
+        # TODO overkill
+        @fall pt.clone().add(0,-1)
+
     swap: (pt1, pt2, cursor=true) ->
       tmp = @blocks[pt1.toString()]
       @blocks[pt1.toString()] = @blocks[pt2.toString()]
       @blocks[pt2.toString()] = tmp
-      cleared = @findMatches(pt1).concat @findMatches(pt2)
+      cleared = @calcMatches [pt1, pt2]
       @broker.trigger 'swap',
         pt1:pt1
         pt2:pt2
         cleared:cleared
-      for pt in cleared
-        @remove pt
-      if cursor or true
-        @fall pt1
-        @fall pt2
-        # TODO overkill
-        @fall pt1.clone().add(0,-1)
-        @fall pt2.clone().add(0,-1)
-        for pt in cleared
-          @fall pt
-          @fall pt.clone().add(0,-1)
+      @clearMatches [pt1, pt2], cleared
 
   class Cursor
     constructor: (@grid, @pt) ->
