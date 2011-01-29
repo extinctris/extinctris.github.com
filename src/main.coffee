@@ -29,6 +29,19 @@ do ->
       delete @blocks[pt]
       @broker.trigger 'remove',
         pt: pt
+  class Cursor
+    constructor: (@grid, @pt) ->
+      @broker = $({})
+    move: (dx, dy) ->
+      @pt.x += dx
+      @pt.y += dy
+      @broker.trigger 'move', {dx:dx, dy:dy}
+    bind: (input) ->
+      input.bind
+        left: => @move -1, 0
+        right: => @move 1, 0
+        up: => @move 0, 1
+        down: => @move 0, -1
   class Field
     constructor: (@grid, @types, @cursor) ->
     init: ->
@@ -38,26 +51,41 @@ do ->
         for x in [0...w] then do (x) =>
           pt = new Point x, y
           @grid.add pt, @types.rand()
-      console.log 'hello'
 
   class View
+    x: (x) -> 32 * x
+    # y=0 is the top in html, but we want it to be the bottom
+    y: (y) -> 32 * (@field.grid.height - 1 - y)
+    sq: (v=1) -> 32 * v
     constructor: (@field) ->
       grid = $('<div class="grid">')
       grid.css
-        width:@field.grid.width*32
-        height:@field.grid.height*32
+        width:@sq @field.grid.width
+        height:@sq @field.grid.height
       grid.appendTo('#game')
 
+      cursor = $('<div class="cursor">')
+      cursor.css
+        left:@x @field.cursor.pt.x
+        top:@y @field.cursor.pt.y
+        width:@sq()-1
+        height:@sq()-1
+      cursor.appendTo('.grid')
+
+      @field.cursor.broker.bind
+        move: (e, args) =>
+          props =
+            left:@x @field.cursor.pt.x
+            top:@y @field.cursor.pt.y
+          cursor.animate props, 50
       @field.grid.broker.bind
         add: (e, args) =>
           block = $('<div class="block block-'+args.block.n+'">')
-          # y=0 is the top in html, but we want it to be the bottom
-          y = (@field.grid.height - args.pt.y - 1) * 32
           block.css
-            left:args.pt.x*32
-            top:y
-            width:30
-            height:30
+            left:@x args.pt.x
+            top:@y args.pt.y
+            width:@sq()-2
+            height:@sq()-2
           block.appendTo('.grid')
 
   tryCatch = (fn) ->
@@ -67,20 +95,39 @@ do ->
       console.error e
       throw e
 
+  class Input
+    constructor: ->
+      @broker = $({})
+      @inputBindings =
+        32: 'swap' #spacebar
+        37: 'left' #arrows
+        38: 'up'
+        39: 'right'
+        40: 'down'
+    bind: (win) ->
+      win.keydown (e) =>
+        event = @inputBindings[e.which]
+        if event?
+          @broker.trigger event
+
   onStart = ->
     $('#intro').fadeOut()
     $('#game').fadeIn()
     types = new BlockTypes 5
     grid = new Grid 6, 15
-    field = new Field grid, types
+    cursor = new Cursor grid, new Point 2,3
+    field = new Field grid, types, cursor
     view = new View field
 
+    input = new Input()
+    input.bind $(window)
+    cursor.bind input.broker
     field.init()
 
   onLoad = ->
     $('#loading').fadeOut()
     $('#intro').fadeIn()
-    setTimeout tryCatch(onStart), 1
+    setTimeout (=>tryCatch onStart), 1
     #setTimeout onStart, 1
     #onStart()
     #$(document).click onStart
