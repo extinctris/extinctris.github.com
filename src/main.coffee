@@ -261,21 +261,13 @@ do ->
         top:0
       grid.appendTo('#game')
 
-      # TODO combine these
-      cursor1 = $('<div class="cursor">')
-      cursor1.css
+      # Cursor isn't really an asset like an image, it's just
+      # divs+css; but complex enough to not do the rendering here.
+      cursor = $('.cursor').clone()
+      cursor.css
         left:@x @field.cursor.pt.x
         top:@y @field.cursor.pt.y
-        width:@sq()-1
-        height:@sq()-1
-      cursor1.appendTo('.grid')
-      cursor2 = $('<div class="cursor">')
-      cursor2.css
-        left:@x @field.cursor.pt.x+1
-        top:@y @field.cursor.pt.y
-        width:@sq()-1
-        height:@sq()-1
-      cursor2.appendTo('.grid')
+      cursor.appendTo('.grid')
 
       @field.schedule.broker.bind
         tick: (e, args) =>
@@ -288,11 +280,7 @@ do ->
           props =
             left:@x @field.cursor.pt.x
             top:@y @field.cursor.pt.y
-          cursor1.animate props, dur
-          props =
-            left: @x @field.cursor.pt.x+1
-            top:@y @field.cursor.pt.y
-          cursor2.animate props, dur
+          cursor.animate props, dur
         blocks = {}
       updateBlock = (b, pt) =>
         props =

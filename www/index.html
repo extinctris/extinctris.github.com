@@ -18,6 +18,17 @@
       <audio class="stage" src="lib/stage.ogg"></audio>
       <audio class="drop" src="lib/drop.ogg"></audio>
       <audio class="scroll" src="lib/scroll.ogg"></audio>
+      
+      <div class="cursor">
+        <div class="pair">
+          <div class="dark"></div>
+          <div class="dark"></div>
+        </div>
+        <div class="pair">
+          <div class="light"></div>
+          <div class="light"></div>
+        </div>
+      </div>
     </div>
     <div id="content">
       <div id="loading">
@@ -25,7 +36,8 @@
              alt="Loading... please wait warmly."
              title="Loading... please wait warmly." />
       </div>
-      <div id="game" style="display:none"></div>
+      <div id="game" style="display:none">
+      </div>
       <div id="intro" style="display:none">
         <h1>Extinctris</h1>
         <p>Arrow keys move, spacebar swaps two blocks.</p>

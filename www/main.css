@@ -18,6 +18,7 @@ body, a {
     background: -webkit-gradient(linear, left top, right bottom, from(#ddd), to(#888));
     background: -moz-linear-gradient(left, #ddd, #888);
     border-radius:6px;
+    -moz-border-radius:6px;
 }
 #content {
     position:fixed;top:50%;left:50%;
@@ -33,6 +34,7 @@ body, a {
 .block {
     border:1px solid black;
     border-radius:6px;
+    -moz-border-radius:6px;
 }
 .block, .cursor {
     position:absolute;
@@ -86,8 +88,26 @@ body, a {
     color:lightblue;
 }
 .cursor {
+    z-index:1;
+    width:66px;height:31px;
+}
+.cursor .pair {
+    position:absolute;
+    top:0px;left:0px;
+}
+.cursor .light {
     border:4px solid white;
     border-radius:6px;
+    -moz-border-radius:6px;
+    margin:-3px;
+    width:30px;height:30px;
+    float:left;
+}
+.cursor .dark {
+    border:6px solid black;
+    border-radius:8px;
+    -moz-border-radius:6px;
     margin:-4px;
-    z-index:1;
+    width:28px;height:28px;
+    float:left;
 }
