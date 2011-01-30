@@ -285,6 +285,8 @@ do ->
             sec = '0' + sec
           while fr.length < 2
             fr = '0' + fr
+          while min.length < 2
+            min = '0' + min
           $('#stats .time').text [min,sec,fr].join ':'
 
       @field.cursor.broker.bind
