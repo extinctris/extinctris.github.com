@@ -46,8 +46,20 @@ task :mkDist => [:build, 'dist/ggj'] do
   sh 'ls -l dist/extinctris.zip'
 end
 
-desc 'deploy'
-task :deployProd => [:mkDist,:todo] do
+desc 'deploy. This will destroy any uncommitted changes!'
+task :deploy => [:mkDist,:todo] do
+  # Github uses the master branch for extinctris.github.com, so we can't work there
+  sh 'git co head'
+  sh 'git branch -D master'
+  sh 'git co -b master'
+  begin
+    sh 'mv www/* .'
+    sh 'git add .'
+    sh 'git commit -am "[AUTO] github build"' 
+    sh 'git push' 
+  ensure
+    sh 'git co head'
+  end
 end
 
 # http://www.trottercashion.com/2010/10/29/replacing-make-with-rake.html
