@@ -158,7 +158,9 @@ do ->
         @fall pt
         # TODO overkill
         @fall pt.clone().add(0,-1)
-      @causeExtinction()
+      if cleared.length > 0
+        @broker.trigger 'clear'
+        @causeExtinction()
 
     swap: (pt1, pt2, cursor=true) ->
       tmp = @blocks[pt1.toString()]
@@ -372,9 +374,9 @@ do ->
       if diff < 333
         return
       @played[src.src] = now
-      # TODO dangit chrome
-      #a = new Audio src.src
-      #a.play()
+      a = new Audio src.src
+      console.log src.src
+      a.play()
 
     bind: (input) ->
       assert input?
