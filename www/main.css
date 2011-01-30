@@ -54,12 +54,12 @@ body, a {
     color:blue;
 }
 .block-2 {
-    background: teal;
-    background: -webkit-gradient(linear, left top, right bottom, from(teal), to(green));
-    background: -moz-linear-gradient(left, teal, green);
+    background: lightgreen;
+    background: -webkit-gradient(linear, left top, right bottom, from(lightgreen), to(green));
+    background: -moz-linear-gradient(left, lightgreen, green);
 }
 .extinct-2 {
-    color:teal;
+    color:lightgreen;
 }
 .block-3 {
     background: yellow;
