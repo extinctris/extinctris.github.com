@@ -280,7 +280,7 @@ do ->
           sec = Math.floor t / 30
           min = (Math.floor sec / 60).toString()
           sec = (sec % 60).toString()
-          fr = (t % 60).toString()
+          fr = (t % 30).toString()
           while sec.length < 2
             sec = '0' + sec
           while fr.length < 2
