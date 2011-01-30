@@ -1,14 +1,12 @@
-* prettier cursor
 * visible timer
 * count blocks cleared in ui
+* fewer extinctions to clear stage
 * animation/delay
 ** remove-matches
 ** gravity
-* sfx. why is everything but gameover/stageclear silent? add a silent-tail?
-* extinction sfx
+
 * later stages -> more colors?
-
-
+* sfx: use soundmanager2, or work around chrome audio bug
 * bgm
 * garbageblock
 ** sfx

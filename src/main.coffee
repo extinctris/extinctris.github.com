@@ -40,7 +40,7 @@ do ->
   class BlockType
     constructor: (@n) ->
   class BlockTypes
-    constructor: (n) ->
+    constructor: (n, @stageClearAt) ->
       @types = (new BlockType(i) for i in [0...n])
     rand: ->
       index = Math.floor @types.length * Math.random()
@@ -142,7 +142,7 @@ do ->
       @types.types = _.without @types.types, zeros...
       for type in zeros
         @broker.trigger 'extinct', type
-      if @types.types.length == 1
+      if @types.types.length <= @types.stageClearAt
         @clear = true
         @broker.trigger 'stage'
 
@@ -274,6 +274,19 @@ do ->
           pct = field.scroll / field.maxscroll
           offset = Math.floor 32 * pct
           grid.css top:-offset
+
+          # Draw timer
+          t = @field.schedule.t
+          sec = Math.floor t / 30
+          min = (Math.floor sec / 60).toString()
+          sec = (sec % 60).toString()
+          fr = (t % 60).toString()
+          while sec.length < 2
+            sec = '0' + sec
+          while fr.length < 2
+            fr = '0' + fr
+          $('#stats .time').text [min,sec,fr].join ':'
+
       @field.cursor.broker.bind
         move: (e, args) =>
           dur = if args.input then 50 else 0
@@ -357,8 +370,9 @@ do ->
       if diff < 333
         return
       @played[src.src] = now
-      a = new Audio src.src
-      a.play()
+      # TODO dangit chrome
+      #a = new Audio src.src
+      #a.play()
 
     bind: (input) ->
       assert input?
@@ -395,11 +409,13 @@ do ->
       stage: 1
       maxscroll: 300
       scroll: 1
+      blockTypes: 6
+      stageClearAt: 5
     updateStats config
     $('#intro').fadeOut()
     $('#game').fadeIn()
     $('#stats').fadeIn()
-    types = new BlockTypes 6
+    types = new BlockTypes config.blockTypes, config.stageClearAt
     grid = new Grid 6, 15, types
     cursor = new Cursor grid, new Point 2,3
     field = new Field grid, cursor, config
