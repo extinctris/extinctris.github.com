@@ -174,7 +174,6 @@ do ->
       @clearMatches [pt1, pt2], cleared
 
     scroll: ->
-      console.log 'scroll-fn'
       xs = [0...@width]
       ys = [0...@height-1]
       ys.reverse()
@@ -182,6 +181,7 @@ do ->
       pts = (new Point(x, @height-1) for x in xs)
       bs = _.filter (@blocks[p.toString()] for p in pts),
         (b) -> b?
+      @broker.trigger 'scroll'
       if bs.length > 0
         @broker.trigger 'gameover'
         return
@@ -204,10 +204,14 @@ do ->
   class Cursor
     constructor: (@grid, @pt) ->
       @broker = $({})
-    move: (dx, dy) ->
+      @grid.broker.bind
+        scroll: =>
+          console.log 'scroll'
+          @move 0, 1, false
+    move: (dx, dy, input=true) ->
       @pt.x = bound @pt.x + dx, 0, @grid.width-2
       @pt.y = bound @pt.y + dy, 0, @grid.height-1
-      @broker.trigger 'move', {dx:dx, dy:dy}
+      @broker.trigger 'move', {dx:dx, dy:dy,input:input}
     bind: (input) ->
       input.bind
         left: => @move -1, 0
@@ -226,6 +230,14 @@ do ->
         @grid.scroll()
       @grid.started = true
 
+      @scroll = 0
+      @maxscroll = 90
+      @schedule.broker.bind 'tick', =>
+        @scroll += 1
+        while @scroll >= @maxscroll
+          @scroll -= @maxscroll
+          @grid.scroll()
+
   class View
     x: (x) -> 32 * x
     # y=0 is the top in html, but we want it to be the bottom
@@ -236,6 +248,8 @@ do ->
       grid.css
         width:@sq @field.grid.width
         height:@sq @field.grid.height
+        left:0
+        top:0
       grid.appendTo('#game')
 
       # TODO combine these
@@ -254,6 +268,11 @@ do ->
         height:@sq()-1
       cursor2.appendTo('.grid')
 
+      @field.schedule.broker.bind
+        tick: (e, args) =>
+          pct = field.scroll / field.maxscroll
+          offset = Math.floor 32 * pct
+          grid.css top:-offset
       @field.cursor.broker.bind
         move: (e, args) =>
           props =
@@ -295,6 +314,8 @@ do ->
             updateBlock b2, args.pt1
           if b1?
             updateBlock b1, args.pt2
+        scroll: (e, args) ->
+          grid.css top:0
 
   tryCatch = (fn) ->
     try
