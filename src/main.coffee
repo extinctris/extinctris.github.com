@@ -1,4 +1,7 @@
 do ->
+  # for users who don't have firebug/etc
+  console ?= {log:(->),info:(->),warn:(->),error:(->),trace:(->)}
+
   assert = (val, msg) ->
     unless val
       throw new Error msg ? val
