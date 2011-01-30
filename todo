@@ -1,3 +1,4 @@
+* speed increases with time
 * count blocks cleared in ui
 * animation/delay
 ** remove-matches
@@ -9,6 +10,7 @@
 ** github upload
 ** playable page (it doesn't look like gamejam's play-page does <script>s...)
 ** ggj upload: http://globalgamejam.org/wiki/hand-procedure ; http://globalgamejam.org/2011/extinctris
+* fix firefox scrolling (rework scrolling/coords?)
 
 * later stages -> more colors?
 * garbageblock
@@ -18,7 +20,5 @@
 
 * better cursor art
 
-! this isn't fun at all
--- experienced players are bored with early levels
--- levels take forever to win, even if you're way ahead
-!! one extinction clears a level?
+. stalemate: you can keep up with clearing blocks, but can't actually win
+!! gradual speed increases (10% per min?). Win fast or die
