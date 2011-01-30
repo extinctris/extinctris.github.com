@@ -141,10 +141,8 @@ do ->
       zeros = _.pluck zeros, 'type'
       @types.types = _.without @types.types, zeros...
       for type in zeros
-        console.log 'extinct',type
         @broker.trigger 'extinct', type
       if @types.types.length == 1
-        console.log 'stageclear'
         @clear = true
         @broker.trigger 'stage'
 
@@ -206,7 +204,6 @@ do ->
       @broker = $({})
       @grid.broker.bind
         scroll: =>
-          console.log 'scroll'
           @move 0, 1, false
     move: (dx, dy, input=true) ->
       @pt.x = bound @pt.x + dx, 0, @grid.width-2
@@ -222,7 +219,7 @@ do ->
         scroll: => @grid.scroll()
 
   class Field
-    constructor: (@grid, @cursor) ->
+    constructor: (@grid, @cursor, @config) ->
       @schedule = new Schedule()
     init: ->
       h = Math.floor @grid.height/2
@@ -231,7 +228,7 @@ do ->
       @grid.started = true
 
       @scroll = 0
-      @maxscroll = 90
+      @maxscroll = @config.maxscroll
       @schedule.broker.bind 'tick', =>
         @scroll += 1
         while @scroll >= @maxscroll
@@ -352,7 +349,7 @@ do ->
       assert $('audio.'+id)[0], 'audio.'+id
     now: -> new Date().getTime()
     play: (id) ->
-      console.log 'sfx.'+id
+      #console.log 'sfx.'+id
       now = @now()
       src = @load id
       # don't spam the same sound
@@ -360,7 +357,6 @@ do ->
       if diff < 250
         return
       @played[src.src] = now
-      console.log src.src
       # TODO re-enable sfx when it stops crashing
       #a = new Audio src.src
       #a.play()
@@ -378,22 +374,35 @@ do ->
       return this
 
   gameover = ->
-    console.log 'gameover-fn'
     $('#gameover').fadeIn(500)
 
-  stage = ->
-    console.log 'STAGE CLEAR'
+  stage = (config) ->
     $('#stageclear').fadeIn().delay(500).fadeOut()
     $('#game').fadeOut null, -> $(this).empty()
-    setTimeout (->onStart()), 1000
+    $('#stats').fadeOut()
+    fn = ->
+      config.stage += 1
+      config.scroll *= 1.2
+      onStart config
+    setTimeout fn, 1000
 
-  onStart = ->
+  updateStats = (config) ->
+    $('#stats .stage').text config.stage
+    $('#stats .speed').text (''+config.scroll).substring 0, 4
+
+  onStart = (config) ->
+    config ?=
+      stage: 1
+      maxscroll: 180
+      scroll: 1
+    updateStats config
     $('#intro').fadeOut()
     $('#game').fadeIn()
+    $('#stats').fadeIn()
     types = new BlockTypes 5
     grid = new Grid 6, 15, types
     cursor = new Cursor grid, new Point 2,3
-    field = new Field grid, cursor
+    field = new Field grid, cursor, config
     view = new View field
     sfx = new SFX()
 
@@ -414,12 +423,10 @@ do ->
       stage: ->
         clearInterval timer
         input.unbind $(window)
-        stage()
+        stage config
       extinct: (e, type) ->
-        console.log 'extinct',JSON.stringify type
         cls = 'extinct-'+type.n
         $('#extinct').addClass(cls).fadeIn().delay(500).fadeOut null, -> $(this).removeClass cls
-        console.log 'done',JSON.stringify type
 
   onLoad = ->
     $('#loading').fadeOut()

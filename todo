@@ -1,5 +1,5 @@
-* ui
-* timer
+* scroll-button clears continuous-scrolls
+* show next-row
 * animation/delay
 ** remove-matches
 ** gravity
