@@ -3,7 +3,7 @@ require 'rake/clean'
 CLEAN.include('dist').include('www/lib')
 CLOBBER.include('dist').include('www/lib')
 
-directory 'dist'
+directory 'dist/ggj'
 directory 'www/lib'
 
 desc 'build dependencies'
@@ -22,12 +22,27 @@ task :watch => [:deps,'www/lib'] do
   sh 'coffee -w -o www/lib -c src test'
 end
 
-task :mkDist => [:build, 'dist'] do
-  sh 'rsync -auvL --delete www/ dist/www/'
-  # NFS doesn't have mod_gzip. See www/.htaccess for the rewrite that tells it to use .gz files
-  FileList['dist/www/**/*.{js,html,css}'].each do |f|
-    sh "gzip --stdout #{f} > #{f}.gz"
-  end
+task :mkDist => [:build, 'dist/ggj'] do
+  sh 'rm -rf dist/ggj' #yes, ugly; sorry
+  sh 'mkdir -p dist/ggj'
+  # http://globalgamejam.org/wiki/hand-procedure
+  # Submit the game in form of one (1!) compressed file format (zip preferred) with the following file and directory structure:
+  #
+  # /src/ => the full sourcecode with all assets of the project
+  sh 'git clone . dist/ggj/src/'
+  sh 'rm -rf dist/ggj/src/.git' #don't leak my local filesystem info into git-config please
+  # /release/ the distributable files including a README.TXT with full installation instructions
+  sh 'rsync -auvL --delete www/ dist/ggj/release/'
+  # /press/ one hi-res image called press.jpg to be used for GGJ PR (1024x768 or better)
+  sh 'mkdir dist/ggj/press'
+  sh 'cp www/game.png dist/ggj/press/game.png' #But it's not 1024x768... well, whatever
+  # /other/ additional media, photos, videos
+  sh 'mkdir dist/ggj/other'
+  # license.txt This is a small text file with precisely the content described here http://www.globalgamejam.org/content/license-and-distribution-agreement (just copy-paste the complete contents of the section License File Contents into license.txt)
+  sh 'cp license.txt dist/ggj/license.txt'
+  #
+  # Upload the compressed file as an attachment on the game submission form. If your file is bigger than 500MBs or you are unable to upload for some reason, you have the option of uploading somewhere else and then providing a link in your game under "alternative download".
+  sh 'cd dist/ggj/ && rm -f ../extinctris.zip && zip -r ../extinctris.zip .'
 end
 
 desc 'deploy'
@@ -62,7 +77,7 @@ task :assets => [:rasterize,:sfx]
 # made with sfxr
 task :sfx => ['www/lib'] do
   sh 'cp assets/*.ogg www/lib/'
-  sh 'cp assets/*.mp3 www/lib/'
+  #sh 'cp assets/*.mp3 www/lib/'
 end
 
 task :rasterize => ['www/lib']
