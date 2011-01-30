@@ -230,10 +230,14 @@ do ->
       @scroll = 0
       @maxscroll = @config.maxscroll
       @schedule.broker.bind 'tick', =>
-        @scroll += 1
+        @scroll += @config.scroll
         while @scroll >= @maxscroll
           @scroll -= @maxscroll
           @grid.scroll()
+    bind: (input) ->
+      input.bind
+        scroll: =>
+          @scroll = 0
 
   class View
     x: (x) -> 32 * x
@@ -382,7 +386,7 @@ do ->
     $('#stats').fadeOut()
     fn = ->
       config.stage += 1
-      config.scroll *= 1.2
+      config.scroll *= 1.3
       onStart config
     setTimeout fn, 1000
 
@@ -393,7 +397,7 @@ do ->
   onStart = (config) ->
     config ?=
       stage: 1
-      maxscroll: 180
+      maxscroll: 300
       scroll: 1
     updateStats config
     $('#intro').fadeOut()
@@ -410,6 +414,7 @@ do ->
     input.bind $(window)
     cursor.bind input.broker
     field.init()
+    field.bind input.broker
     sfx.bind(grid.broker).bind(cursor.broker)
     #sfx.play 'scroll'
     timer = setInterval (=>tryCatch =>field.schedule.tick()), 33

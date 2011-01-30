@@ -1,13 +1,12 @@
 * scroll-button clears continuous-scrolls
 * show next-row
+* visible timer
 * animation/delay
 ** remove-matches
 ** gravity
 * sfx. why is everything but gameover/stageclear silent? add a silent-tail?
 * extinction sfx
-* stages get harder
-** scroll-speed
-** more colors?
+* later stages -> more colors?
 
 * bgm
 * garbageblock
@@ -17,3 +16,6 @@
 
 * better cursor art
 
+! this isn't fun at all
+-- experienced players are bored with early levels
+-- levels take forever to win, even if you're way ahead
