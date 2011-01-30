@@ -13,11 +13,16 @@ body, a {
     background: black;
     border-radius:6px;
 }
-#content, #loading, #intro, #game, #gameover {
-    position:absolute;top:0px;left:0px;
+#content {
+    position:fixed;top:50%;left:50%;
+    width:800px;height:640px;
+    margin-left:-400px;margin-top:-320px;
 }
-#gameover {
-    width:400px;height:320px;
+#intro, #paused, #gameover, #stageclear {
+    z-index:2;
+}
+#stageclear, #extinct {
+    float:right;
 }
 .block {
     border:1px solid black;
@@ -29,20 +34,38 @@ body, a {
 .block-0 {
     background: red;
 }
+.extinct-0 {
+    color:red;
+}
 .block-1 {
     background: blue;
+}
+.extinct-1 {
+    color:blue;
 }
 .block-2 {
     background: green;
 }
+.extinct-2 {
+    color:green;
+}
 .block-3 {
     background: yellow;
+}
+.extinct-3 {
+    color:yellow;
 }
 .block-4 {
     background: purple;
 }
+.extinct-4 {
+    color:purple;
+}
 .block-5 {
     background: cyan;
+}
+.extinct-5 {
+    color:cyan;
 }
 .cursor {
     border:4px solid white;

@@ -131,8 +131,9 @@ do ->
         fallFrom.add(0,1)
 
     causeExtinction: ->
-      # Don't trigger extinction during the intial scrolling/setup
-      unless @started
+      # Don't trigger extinction during the intial scrolling/setup, or
+      # after we've already won
+      if (not @started) or @clear
         return
       # which types are extinct?
       counts = @countTypes()
@@ -144,6 +145,7 @@ do ->
         @broker.trigger 'extinct', type
       if @types.types.length == 1
         console.log 'stageclear'
+        @clear = true
         @broker.trigger 'stage'
 
     calcMatches: (pts) ->
@@ -359,8 +361,9 @@ do ->
 
   stage = ->
     console.log 'STAGE CLEAR'
-    $('#game').empty()
-    onStart()
+    $('#stageclear').fadeIn().delay(500).fadeOut()
+    $('#game').fadeOut null, -> $(this).empty()
+    setTimeout (->onStart()), 1000
 
   onStart = ->
     $('#intro').fadeOut()
@@ -390,8 +393,11 @@ do ->
         clearInterval timer
         input.unbind $(window)
         stage()
-
-
+      extinct: (e, type) ->
+        console.log 'extinct',JSON.stringify type
+        cls = 'extinct-'+type.n
+        $('#extinct').addClass(cls).fadeIn().delay(500).fadeOut null, -> $(this).removeClass cls
+        console.log 'done',JSON.stringify type
 
   onLoad = ->
     $('#loading').fadeOut()
