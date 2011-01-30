@@ -433,7 +433,7 @@ do ->
   onStart = (config) ->
     config ?=
       stage: 1
-      maxscroll: 300
+      maxscroll: 500
       scroll: 1
       blockTypes: 6
       stageClearAt: 3
