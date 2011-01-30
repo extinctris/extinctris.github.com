@@ -245,6 +245,14 @@ do ->
     y: (y) -> 32 * (@field.grid.height - 1 - y)
     sq: (v=1) -> 32 * v
     constructor: (@field) ->
+      bg = $('<div class="grid-background">')
+      bg.css
+        width:@sq @field.grid.width
+        height:@sq @field.grid.height
+        left:0
+        top:0
+      bg.appendTo('#game')
+
       grid = $('<div class="grid">')
       grid.css
         width:@sq @field.grid.width

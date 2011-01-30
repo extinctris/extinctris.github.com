@@ -8,8 +8,10 @@ body, a {
     visibility:hidden;/*display:none breaks opera, contents don't load*/
     position:absolute;top:0px;left:0px;
 }
-.grid {
+.grid-background, .grid {
     position:fixed;
+}
+.grid-background {
     background: black;
     border-radius:6px;
 }
