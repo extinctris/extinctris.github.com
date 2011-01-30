@@ -1,5 +1,7 @@
 body {
-    background:grey;
+    background:black;
+    text-align:center;
+    font-family:monospace;
 }
 body, a {
     color:white;
@@ -9,10 +11,12 @@ body, a {
     position:absolute;top:0px;left:0px;
 }
 .grid-background, .grid {
-    position:fixed;
+    position:absolute;
 }
 .grid-background {
-    background: black;
+    background:#888;
+    background: -webkit-gradient(linear, left top, right bottom, from(#ddd), to(#888));
+    background: -moz-linear-gradient(left, #ddd, #888);
     border-radius:6px;
 }
 #content {
@@ -35,42 +39,55 @@ body, a {
 }
 .block-0 {
     background: red;
+    background: -webkit-gradient(linear, left top, right bottom, from(red), to(darkred));
+    background: -moz-linear-gradient(left, red,darkred);
 }
 .extinct-0 {
     color:red;
 }
 .block-1 {
     background: blue;
+    background: -webkit-gradient(linear, left top, right bottom, from(blue), to(darkblue));
+    background: -moz-linear-gradient(left, blue,darkblue);
 }
 .extinct-1 {
     color:blue;
 }
 .block-2 {
-    background: green;
+    background: teal;
+    background: -webkit-gradient(linear, left top, right bottom, from(teal), to(green));
+    background: -moz-linear-gradient(left, teal, green);
 }
 .extinct-2 {
-    color:green;
+    color:teal;
 }
 .block-3 {
     background: yellow;
+    background: -webkit-gradient(linear, left top, right bottom, from(yellow), to(orange));
+    background: -moz-linear-gradient(left, yellow,orange);
 }
 .extinct-3 {
     color:yellow;
 }
 .block-4 {
-    background: purple;
+    background: violet;
+    background: -webkit-gradient(linear, left top, right bottom, from(violet), to(purple));
+    background: -moz-linear-gradient(left, violet, purple);
 }
 .extinct-4 {
-    color:purple;
+    color:violet;
 }
 .block-5 {
-    background: cyan;
+    background: lightblue;
+    background: -webkit-gradient(linear, left top, right bottom, from(lightblue), to(cyan));
+    background: -moz-linear-gradient(left, lightblue, cyan);
 }
 .extinct-5 {
-    color:cyan;
+    color:lightblue;
 }
 .cursor {
     border:4px solid white;
+    border-radius:6px;
     margin:-4px;
     z-index:1;
 }

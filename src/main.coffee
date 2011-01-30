@@ -400,7 +400,7 @@ do ->
 
   updateStats = (config) ->
     $('#stats .stage').text config.stage
-    $('#stats .speed').text (''+config.scroll).substring 0, 4
+    $('#stats .speed').text Math.floor(config.scroll*10)
 
   onStart = (config) ->
     config ?=
@@ -411,7 +411,7 @@ do ->
     $('#intro').fadeOut()
     $('#game').fadeIn()
     $('#stats').fadeIn()
-    types = new BlockTypes 5
+    types = new BlockTypes 6
     grid = new Grid 6, 15, types
     cursor = new Cursor grid, new Point 2,3
     field = new Field grid, cursor, config

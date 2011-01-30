@@ -1,10 +1,13 @@
+* prettier cursor
 * visible timer
+* count blocks cleared in ui
 * animation/delay
 ** remove-matches
 ** gravity
 * sfx. why is everything but gameover/stageclear silent? add a silent-tail?
 * extinction sfx
 * later stages -> more colors?
+
 
 * bgm
 * garbageblock
