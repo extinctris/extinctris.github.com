@@ -484,7 +484,7 @@ do ->
       val = $(this).attr 'checked'
       $('.sfx-enable .enabled').text if val then 'ON' else 'OFF'
     $('#sfx-enable-checkbox').change() #might be off after page refresh
-    $('#loading').fadeOut()
+    $('#loading').hide()
     $('#intro').fadeIn()
     #setTimeout (=>tryCatch onStart), 1
     #setTimeout onStart, 1
