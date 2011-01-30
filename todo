@@ -2,17 +2,11 @@
 ** remove-matches
 ** gravity
 * fix firefox scrolling (rework scrolling/coords?)
+* declare it done; upload final version to ggj. http://globalgamejam.org/2011/extinctris
 
 * bgm
-* declare it done; upload finial version to ggj. http://globalgamejam.org/2011/extinctris
-
 * later stages -> more colors?
-* garbageblock
+* garbageblocks created on extinction
 ** sfx
 ** create
 ** clear
-
-* better cursor art
-
-. stalemate: you can keep up with clearing blocks, but can't actually win
-!! gradual speed increases (10% per min?). Win fast or die
