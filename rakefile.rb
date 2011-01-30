@@ -40,6 +40,8 @@ task :mkDist => [:build, 'dist/ggj'] do
   sh 'mkdir dist/ggj/other'
   # license.txt This is a small text file with precisely the content described here http://www.globalgamejam.org/content/license-and-distribution-agreement (just copy-paste the complete contents of the section License File Contents into license.txt)
   sh 'cp license.txt dist/ggj/license.txt'
+
+  sh 'cp readme-ggj.txt dist/ggj/readme.txt'
   #
   # Upload the compressed file as an attachment on the game submission form. If your file is bigger than 500MBs or you are unable to upload for some reason, you have the option of uploading somewhere else and then providing a link in your game under "alternative download".
   sh 'cd dist/ggj/ && rm -f ../extinctris.zip && zip -r ../extinctris.zip .'
