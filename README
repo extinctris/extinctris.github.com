@@ -1,6 +1,6 @@
 Use the 'head' branch. 'master' is solely for publishing the game to Github.
 
-Extinctris is a little game written for Global Game Jam 2011.
+Extinctris is a little puzzle game written for Global Game Jam 2011.
 http://globalgamejam.org
 http://globalgamejam.org/2011/extinctris
 
@@ -9,8 +9,7 @@ http://coffeescript.org
 http://jquery.com
 http://documentcloud.github.com/underscore/
 
+Graphics are 100% HTML/CSS.
+
 Sound effects created with sfxr.
 http://www.drpetter.se/project_sfxr.html
-
-Music would have been created with LMMS, but I ran out of time.
-http://lmms.sourceforge.net/
