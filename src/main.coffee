@@ -275,14 +275,15 @@ do ->
           grid.css top:-offset
       @field.cursor.broker.bind
         move: (e, args) =>
+          dur = if args.input then 50 else 0
           props =
             left:@x @field.cursor.pt.x
             top:@y @field.cursor.pt.y
-          cursor1.animate props, 50
+          cursor1.animate props, dur
           props =
             left: @x @field.cursor.pt.x+1
             top:@y @field.cursor.pt.y
-          cursor2.animate props, 50
+          cursor2.animate props, dur
         blocks = {}
       updateBlock = (b, pt) =>
         props =
