@@ -444,9 +444,11 @@ do ->
   onLoad = ->
     $('#loading').fadeOut()
     $('#intro').fadeIn()
-    setTimeout (=>tryCatch onStart), 1
+    #setTimeout (=>tryCatch onStart), 1
     #setTimeout onStart, 1
     #onStart()
-    #$(document).click onStart
+    $(document).bind 'keypress.start', =>
+      $(document).unbind 'keypress.start'
+      tryCatch onStart
 
   jQuery onLoad
