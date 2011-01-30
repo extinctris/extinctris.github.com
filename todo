@@ -2,10 +2,13 @@
 * animation/delay
 ** remove-matches
 ** gravity
-* option
 * sfx: use soundmanager2, or work around chrome audio bug
 * sfx: on/off checkbox
 * bgm
+* release
+** github upload
+** playable page (it doesn't look like gamejam's play-page does <script>s...)
+** ggj upload: http://globalgamejam.org/wiki/hand-procedure ; http://globalgamejam.org/2011/extinctris
 
 * later stages -> more colors?
 * garbageblock
