@@ -56,7 +56,8 @@ task :deploy => [:mkDist,:todo] do
     sh 'mv www/* .'
     sh 'git add .'
     sh 'git commit -am "[AUTO] github build"' 
-    sh 'git push' 
+    # This branch is just for publishing now. Losing history is okay, I promise
+    sh 'git push -ff' 
   ensure
     sh 'git co head'
   end
