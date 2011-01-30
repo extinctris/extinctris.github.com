@@ -12,12 +12,13 @@
 
 * sfx
 ** block-swap
+** cursor-move
 ** block-clear
 ** drop
-** garbageblock-clear
 ** scroll
 * bgm
 * garbageblock
+** sfx
 ** create
 ** clear
 

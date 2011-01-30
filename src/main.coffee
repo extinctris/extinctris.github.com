@@ -290,6 +290,38 @@ do ->
     unbind: (win) ->
       win.unbind 'keydown.input'
 
+  class SFX
+    constructor: ->
+      @played = {}
+      @playingTotal = 0
+    load: (id) ->
+      assert $('audio.'+id)[0], 'audio.'+id
+    now: -> new Date().getTime()
+    play: (id) ->
+      console.log 'sfx.'+id
+      now = @now()
+      src = @load id
+      # don't spam the same sound
+      diff = now - (@played[src.src] ? 0)
+      if diff < 250
+        return
+      @played[src.src] = now
+      console.log src.src
+      a = new Audio src.src
+      a.play()
+
+    bind: (input) ->
+      assert input?
+      input.bind
+        gameover: =>@play 'gameover'
+        move: =>@play 'move'
+        clear: =>@play 'clear'
+        swap: =>@play 'swap'
+        stage: =>@play 'stage'
+        drop: =>@play 'drop'
+        scroll: =>@play 'scroll'
+      return this
+
   gameover = ->
     console.log 'gameover-fn'
     $('#gameover').fadeIn(500)
@@ -302,11 +334,14 @@ do ->
     cursor = new Cursor grid, new Point 2,3
     field = new Field grid, cursor
     view = new View field
+    sfx = new SFX()
 
     input = new Input()
     input.bind $(window)
     cursor.bind input.broker
     field.init()
+    sfx.bind(grid.broker).bind(cursor.broker)
+    #sfx.play 'scroll'
     timer = setInterval (=>tryCatch =>field.schedule.tick()), 33
     #field.schedule.broker.bind
     #  tick: ->
