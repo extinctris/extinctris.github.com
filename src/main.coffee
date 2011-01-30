@@ -403,6 +403,13 @@ do ->
   updateStats = (config) ->
     $('#stats .stage').text config.stage
     $('#stats .speed').text Math.floor(config.scroll*10)
+  updateExtinctions = (types) ->
+    n = types.types.length - types.stageClearAt
+    text = n+' extinction'
+    # plural
+    unless n == 1
+      text += 's'
+    $('#stats .extinctionsLeft').text text
 
   onStart = (config) ->
     config ?=
@@ -410,7 +417,7 @@ do ->
       maxscroll: 300
       scroll: 1
       blockTypes: 6
-      stageClearAt: 5
+      stageClearAt: 3
     updateStats config
     $('#intro').fadeOut()
     $('#game').fadeIn()
@@ -428,6 +435,7 @@ do ->
     field.init()
     field.bind input.broker
     sfx.bind(grid.broker).bind(cursor.broker)
+    updateExtinctions types
     #sfx.play 'scroll'
     timer = setInterval (=>tryCatch =>field.schedule.tick()), 33
     #field.schedule.broker.bind
@@ -442,6 +450,7 @@ do ->
         input.unbind $(window)
         stage config
       extinct: (e, type) ->
+        updateExtinctions types
         cls = 'extinct-'+type.n
         $('#extinct').addClass(cls).fadeIn().delay(500).fadeOut null, -> $(this).removeClass cls
 
