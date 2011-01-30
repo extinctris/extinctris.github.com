@@ -52,6 +52,7 @@ do ->
     constructor: (@width, @height, @types) ->
       @blocks = {}
       @broker = $({})
+      @started = false
     add: (pt, block,clear=true) ->
       @blocks[pt.toString()] = block
       if clear
@@ -61,6 +62,17 @@ do ->
         block: block
       if clear
         @clearMatches [pt], cleared
+    countTypes: ->
+      counts = {}
+      for t in @types.types
+        counts[t.n] =
+          count: 0
+          type: t
+      for p,b of @blocks
+        if b? #TODO this shouldn't be possible!
+          assert counts[b.n]?, b.n
+          counts[b.n].count += 1
+      return (v for k,v of counts)
     remove: (pt) ->
       delete @blocks[pt.toString()]
       @broker.trigger 'remove',
@@ -118,6 +130,22 @@ do ->
         fallTo.add(0,1)
         fallFrom.add(0,1)
 
+    causeExtinction: ->
+      # Don't trigger extinction during the intial scrolling/setup
+      unless @started
+        return
+      # which types are extinct?
+      counts = @countTypes()
+      zeros = _.filter counts, (c) -> c.count == 0
+      zeros = _.pluck zeros, 'type'
+      @types.types = _.without @types.types, zeros...
+      for type in zeros
+        console.log 'extinct',type
+        @broker.trigger 'extinct', type
+      if @types.types.length == 1
+        console.log 'stageclear'
+        @broker.trigger 'stage'
+
     calcMatches: (pts) ->
       cleared = []
       for pt in pts
@@ -130,6 +158,7 @@ do ->
         @fall pt
         # TODO overkill
         @fall pt.clone().add(0,-1)
+      @causeExtinction()
 
     swap: (pt1, pt2, cursor=true) ->
       tmp = @blocks[pt1.toString()]
@@ -193,6 +222,7 @@ do ->
       h = Math.floor @grid.height/2
       for y in [0...h] then do (y) =>
         @grid.scroll()
+      @grid.started = true
 
   class View
     x: (x) -> 32 * x
@@ -307,8 +337,9 @@ do ->
         return
       @played[src.src] = now
       console.log src.src
-      a = new Audio src.src
-      a.play()
+      # TODO re-enable sfx when it stops crashing
+      #a = new Audio src.src
+      #a.play()
 
     bind: (input) ->
       assert input?
@@ -325,6 +356,11 @@ do ->
   gameover = ->
     console.log 'gameover-fn'
     $('#gameover').fadeIn(500)
+
+  stage = ->
+    console.log 'STAGE CLEAR'
+    $('#game').empty()
+    onStart()
 
   onStart = ->
     $('#intro').fadeOut()
@@ -350,6 +386,12 @@ do ->
         clearInterval timer
         input.unbind $(window)
         gameover()
+      stage: ->
+        clearInterval timer
+        input.unbind $(window)
+        stage()
+
+
 
   onLoad = ->
     $('#loading').fadeOut()

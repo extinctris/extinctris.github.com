@@ -1,21 +1,17 @@
 * scrolling
 ** continuous
 *** accelerating
-* extinction mechanic
-* stage-end (when garbage-block clear)
-** next-stage
 * ui
 * score
 * animation/delay
 ** remove-matches
 ** gravity
+* sfx. why is everything but gameover/stageclear silent? add a silent-tail?
+* extinction visuals/sfx
+* stages get harder
+** scroll-speed
+** more colors?
 
-* sfx
-** block-swap
-** cursor-move
-** block-clear
-** drop
-** scroll
 * bgm
 * garbageblock
 ** sfx
