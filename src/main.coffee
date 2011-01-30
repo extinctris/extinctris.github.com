@@ -404,7 +404,13 @@ do ->
 
   updateStats = (config) ->
     $('#stats .stage').text config.stage
-    $('#stats .speed').text Math.floor(config.scroll*10)
+    speed = $('#stats .speed')
+    text = Math.floor(config.scroll*10)
+    unless speed.text() == text
+      speed.fadeOut null, ->
+        speed.text text
+        speed.fadeIn()
+
   updateExtinctions = (types) ->
     n = types.types.length - types.stageClearAt
     text = n+' extinction'
@@ -440,6 +446,11 @@ do ->
     updateExtinctions types
     #sfx.play 'scroll'
     timer = setInterval (=>tryCatch =>field.schedule.tick()), 33
+    # speed up as time passes
+    scrollIncr = 0.1 * config.scroll
+    field.schedule.interval 30 * 30, ->
+      config.scroll += scrollIncr
+      updateStats config
     #field.schedule.broker.bind
     #  tick: ->
     grid.broker.bind
