@@ -1,3 +1,4 @@
 www/lib
+www/deps
 dist
 assets/*.wav
