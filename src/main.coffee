@@ -354,12 +354,11 @@ do ->
       src = @load id
       # don't spam the same sound
       diff = now - (@played[src.src] ? 0)
-      if diff < 250
+      if diff < 333
         return
       @played[src.src] = now
-      # TODO re-enable sfx when it stops crashing
-      #a = new Audio src.src
-      #a.play()
+      a = new Audio src.src
+      a.play()
 
     bind: (input) ->
       assert input?
@@ -371,6 +370,7 @@ do ->
         stage: =>@play 'stage'
         drop: =>@play 'drop'
         scroll: =>@play 'scroll'
+        extinct: =>@play 'extinct'
       return this
 
   gameover = ->

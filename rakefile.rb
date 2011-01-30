@@ -37,10 +37,15 @@ end
 # http://www.trottercashion.com/2010/10/29/replacing-make-with-rake.html
 WAVS = FileList['assets/*.wav']
 OGGS = WAVS.ext('.ogg')
+#MP3S = WAVS.ext('.mp3')
 task :sfx => OGGS
+#task :sfx => MP3S
 rule '.ogg' => '.wav' do |t|
   sh "oggenc #{t.source}"
 end
+#rule '.mp3' => '.wav' do |t|
+#  sh "lame #{t.source} #{t.name}"
+#end
 
 desc 'run emacs for devel'
 task :emacs do
@@ -57,6 +62,7 @@ task :assets => [:rasterize,:sfx]
 # made with sfxr
 task :sfx => ['www/lib'] do
   sh 'cp assets/*.ogg www/lib/'
+  sh 'cp assets/*.mp3 www/lib/'
 end
 
 task :rasterize => ['www/lib']
