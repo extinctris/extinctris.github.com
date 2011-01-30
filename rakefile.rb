@@ -43,6 +43,7 @@ task :mkDist => [:build, 'dist/ggj'] do
   #
   # Upload the compressed file as an attachment on the game submission form. If your file is bigger than 500MBs or you are unable to upload for some reason, you have the option of uploading somewhere else and then providing a link in your game under "alternative download".
   sh 'cd dist/ggj/ && rm -f ../extinctris.zip && zip -r ../extinctris.zip .'
+  sh 'ls -l dist/extinctris.zip'
 end
 
 desc 'deploy'
