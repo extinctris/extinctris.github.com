@@ -1,8 +1,5 @@
-* scrolling
-** continuous
-*** accelerating
 * ui
-* score
+* timer
 * animation/delay
 ** remove-matches
 ** gravity
