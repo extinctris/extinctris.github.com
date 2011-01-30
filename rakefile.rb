@@ -58,6 +58,7 @@ task :deploy => [:mkDist,:todo] do
   sh 'git branch -D master'
   sh 'git co -b master'
   begin
+    sh 'rm -rf deps' #conflicting
     sh 'mv www/* .'
     sh 'git add .'
     sh 'git commit -am "[AUTO] github build"' 
