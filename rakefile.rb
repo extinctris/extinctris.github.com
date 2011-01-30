@@ -1,18 +1,15 @@
 require 'rake/clean'
 
-CLEAN.include('dist').include('www/lib').include('www/deps')
-CLOBBER.include('dist').include('www/lib').include('www/deps')
+CLEAN.include('dist').include('www/lib')
+CLOBBER.include('dist').include('www/lib')
 
 directory 'dist/ggj'
 directory 'www/lib'
-directory 'www/deps'
 
-# Github gets mad at us for putting these in www/lib/ with everything else (they don't appear on extinctris.github.com).
-# Not sure why, but easy to workaround.
 desc 'build dependencies'
-task :deps => ['www/deps'] do
+task :deps => ['www/lib'] do
   FileList['deps/*'].each do |f|
-    sh "ln -sf ../../#{f} www/deps"
+    sh "cp -pf #{f} www/lib/"
   end
 end
 
@@ -58,7 +55,6 @@ task :deploy => [:mkDist,:todo] do
   sh 'git branch -D master'
   sh 'git co -b master'
   begin
-    sh 'rm -rf deps' #conflicting
     sh 'mv www/* .'
     sh 'git add .'
     sh 'git commit -am "[AUTO] github build"' 
