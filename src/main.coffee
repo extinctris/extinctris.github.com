@@ -340,7 +340,7 @@ do ->
       throw e
 
   class Input
-    constructor: ->
+    constructor: (@config) ->
       @broker = $({})
       @inputBindings =
         13: 'scroll' #enter
@@ -355,17 +355,26 @@ do ->
         event = @inputBindings[e.which]
         if event?
           @broker.trigger event
+      # TODO hack
+      input = this
+      $('#sfx-enable-checkbox').bind 'change.input', ->
+        val = $(this).attr 'checked'
+        input.config.sfx = val
     unbind: (win) ->
       win.unbind 'keydown.input'
+      # TODO hack
+      $('#sfx-enable-checkbox').unbind 'change.input'
 
   class SFX
-    constructor: ->
+    constructor: (@config) ->
       @played = {}
       @playingTotal = 0
     load: (id) ->
       assert $('audio.'+id)[0], 'audio.'+id
     now: -> new Date().getTime()
     play: (id) ->
+      unless @config.sfx
+        return
       #console.log 'sfx.'+id
       now = @now()
       src = @load id
@@ -428,6 +437,8 @@ do ->
       scroll: 1
       blockTypes: 6
       stageClearAt: 3
+      sfx: $('#sfx-enable-checkbox').attr 'checked'
+    console.log config.sfx
     updateStats config
     $('#intro').fadeOut()
     $('#game').fadeIn()
@@ -437,9 +448,9 @@ do ->
     cursor = new Cursor grid, new Point 2,3
     field = new Field grid, cursor, config
     view = new View field
-    sfx = new SFX()
+    sfx = new SFX config
 
-    input = new Input()
+    input = new Input config
     input.bind $(window)
     cursor.bind input.broker
     field.init()
@@ -468,8 +479,11 @@ do ->
         updateExtinctions types
         cls = 'extinct-'+type.n
         $('#extinct').addClass(cls).fadeIn().delay(500).fadeOut null, -> $(this).removeClass cls
-
   onLoad = ->
+    $('#sfx-enable-checkbox').bind 'change', ->
+      val = $(this).attr 'checked'
+      $('.sfx-enable .enabled').text if val then 'ON' else 'OFF'
+    $('#sfx-enable-checkbox').change() #might be off after page refresh
     $('#loading').fadeOut()
     $('#intro').fadeIn()
     #setTimeout (=>tryCatch onStart), 1
